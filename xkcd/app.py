@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 from flask import Flask
-from conduit.extensions import bcrypt, cache, db, migrate, jwt, cors
+from xkcd.extensions import bcrypt, cache, db, migrate, jwt, cors
 
-from conduit import commands, user, profile, articles
-from conduit.settings import ProdConfig
-from conduit.exceptions import InvalidUsage
+from xkcd import commands, user, profile, comics
+from xkcd.settings import ProdConfig
+from xkcd.exceptions import InvalidUsage
 
 
 def create_app(config_object=ProdConfig):
@@ -39,11 +39,11 @@ def register_blueprints(app):
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
     cors.init_app(user.views.blueprint, origins=origins)
     cors.init_app(profile.views.blueprint, origins=origins)
-    cors.init_app(articles.views.blueprint, origins=origins)
+    cors.init_app(comics.views.blueprint, origins=origins)
 
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(profile.views.blueprint)
-    app.register_blueprint(articles.views.blueprint)
+    app.register_blueprint(comics.views.blueprint)
 
 
 def register_errorhandlers(app):
@@ -64,9 +64,7 @@ def register_shellcontext(app):
             'db': db,
             'User': user.models.User,
             'UserProfile': profile.models.UserProfile,
-            'Article': articles.models.Article,
-            'Tag': articles.models.Tags,
-            'Comment': articles.models.Comment,
+            'Comic': comics.models.Comic,
         }
 
     app.shell_context_processor(shell_context)

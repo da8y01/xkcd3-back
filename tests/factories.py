@@ -3,8 +3,8 @@
 from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
 
-from conduit.database import db
-from conduit.user.models import User
+from xkcd.database import db
+from xkcd.user.models import User
 
 
 class BaseFactory(SQLAlchemyModelFactory):
@@ -20,8 +20,9 @@ class BaseFactory(SQLAlchemyModelFactory):
 class UserFactory(BaseFactory):
     """User factory."""
 
-    username = Sequence(lambda n: 'user{0}'.format(n))
-    email = Sequence(lambda n: 'user{0}@example.com'.format(n))
+    first_name = Sequence(lambda n: 'first{0}'.format(n))
+    last_name = Sequence(lambda n: 'last{0}'.format(n))
+    email = Sequence(lambda n: 'email{0}@example.com'.format(n))
     password = PostGenerationMethodCall('set_password', 'example')
 
     class Meta:

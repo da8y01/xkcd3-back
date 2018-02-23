@@ -22,7 +22,7 @@ def jwt_optional(realm=None):
     return wrapper
 
 
-from conduit.user.models import User # noqa
+from xkcd.user.models import User # noqa
 
 
 def jwt_identity(payload):

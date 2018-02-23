@@ -1,13 +1,14 @@
 # coding: utf-8
 
 from flask import url_for
-from conduit.exceptions import USER_ALREADY_REGISTERED
+from xkcd.exceptions import USER_ALREADY_REGISTERED
 
 
 def _register_user(testapp, **kwargs):
-    return testapp.post_json(url_for("user.register_user"), {
+    return testapp.post_json(url_for("users.register_user"), {
         "user": {
-            "username": "mo",
+            "first_name": "mo",
+            "last_name": "mo",
             "email": "mo@mo.mo",
             "password": "momo"
         }
@@ -25,7 +26,7 @@ class TestAuthenticate:
     def test_user_login(self, testapp):
         _register_user(testapp)
 
-        resp = testapp.post_json(url_for('user.login_user'), {'user': {
+        resp = testapp.post_json(url_for('users.login_user'), {'user': {
             'email': 'mo@mo.mo',
             'password': 'momo'
         }})
@@ -37,7 +38,7 @@ class TestAuthenticate:
     def test_get_user(self, testapp):
         resp = _register_user(testapp)
         token = str(resp.json['user']['token'])
-        resp = testapp.get(url_for('user.get_user'), headers={
+        resp = testapp.get(url_for('users.get_user'), headers={
             'Authorization': 'Token {}'.format(token)
         })
         assert resp.json['user']['email'] == 'mo@mo.mo'
@@ -52,14 +53,12 @@ class TestAuthenticate:
     def test_update_user(self, testapp):
         resp = _register_user(testapp)
         token = str(resp.json['user']['token'])
-        resp = testapp.put_json(url_for('user.update_user'), {
+        resp = testapp.put_json(url_for('users.update_user'), {
             'user': {
                 'email': 'meh@mo.mo',
-                'bio': 'I\'m a simple man',
                 'password': 'hmm'
             }
         }, headers={
             'Authorization': 'Token {}'.format(token)
         })
-        assert resp.json['user']['bio'] == 'I\'m a simple man'
         assert resp.json['user']['email'] == 'meh@mo.mo'
