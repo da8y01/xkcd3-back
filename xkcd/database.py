@@ -19,16 +19,13 @@ class SurrogatePK(object):
 
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(30), primary_key=True)
 
     @classmethod
     def get_by_id(cls, record_id):
         """Get record by ID."""
-        if any(
-                (isinstance(record_id, basestring) and record_id.isdigit(),
-                 isinstance(record_id, (int, float))),
-        ):
-            return cls.query.get(int(record_id))
+        if isinstance(record_id, basestring):
+            return cls.query.get(record_id)
 
 
 def reference_col(tablename, nullable=False, pk_name='id', **kwargs):

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import datetime as dt
+import time
 
 from flask import Blueprint, jsonify
 from flask_apispec import marshal_with, use_kwargs
@@ -52,7 +52,6 @@ def update_comic(slug, **kwargs):
     comic = Comic.query.filter_by(slug=slug, author_id=current_identity.profile.id).first()
     if not comic:
         raise InvalidUsage.comic_not_found()
-    comic.update(updatedAt=dt.datetime.utcnow, **kwargs)
     comic.save()
     return comic
 

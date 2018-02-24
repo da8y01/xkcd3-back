@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import datetime as dt
+import datetime
 
 from flask_jwt import current_identity
 from slugify import slugify
@@ -8,6 +8,8 @@ from slugify import slugify
 from xkcd.database import (Model, SurrogatePK, db, Column,
                               reference_col, relationship)
 from xkcd.profile.models import UserProfile
+
+from bson import ObjectId
 
 
 class Comic(SurrogatePK, Model):
@@ -25,12 +27,13 @@ class Comic(SurrogatePK, Model):
     img = Column(db.String(200), nullable=False)
     title = Column(db.String(100), nullable=False)
     day = Column(db.String(2), nullable=False)
-    author_id = reference_col('userprofile', nullable=False)
+    author_id = reference_col('userprofile', nullable=True)
     author = relationship('UserProfile', backref=db.backref('comics'))
 
     def __init__(self, author, month, num, link, year,
                           news, safe_title, transcript, alt, 
                           img, title, day, **kwargs):
-        db.Model.__init__(self, month=month, num=num, link=link, year=year,
+        dummy_id = str(ObjectId.from_datetime(datetime.datetime.now()))
+        db.Model.__init__(self, id=dummy_id, month=month, num=num, link=link, year=year,
                           news=news, safe_title=safe_title, transcript=transcript, alt=alt, 
                           img=img, title=title, day=day, **kwargs)

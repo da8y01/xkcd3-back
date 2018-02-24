@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """User models."""
-import time
+import datetime
 
 from flask_jwt import _default_jwt_encode_handler
 
 from xkcd.database import Column, Model, SurrogatePK, db
 from xkcd.extensions import bcrypt
+
+from bson import ObjectId
 
 
 class User(SurrogatePK, Model):
@@ -19,7 +21,8 @@ class User(SurrogatePK, Model):
 
     def __init__(self, first_name, last_name, email, password, **kwargs):
         """Create instance."""
-        db.Model.__init__(self, id=int(time.time()), first_name=first_name, last_name=last_name, email=email, password=password, **kwargs)
+        dummy_id = str(ObjectId.from_datetime(datetime.datetime.now()))
+        db.Model.__init__(self, id=dummy_id, first_name=first_name, last_name=last_name, email=email, password=password, **kwargs)
         self.set_password(password)
 
     def set_password(self, password):

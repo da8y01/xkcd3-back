@@ -1,19 +1,12 @@
-.. image:: image.png
-
 Quickstart
 ----------
-
-CircleCI build:
-
-.. image:: https://circleci.com/gh/gothinkster/flask-realworld-example-app.png
-
 
 First, set your app's secret key as an environment variable. For example,
 add the following to ``.bashrc`` or ``.bash_profile``.
 
 .. code-block:: bash
 
-    export CONDUIT_SECRET='something-really-secret'
+    export XKCD_SECRET='something-really-secret'
 
 Before running shell commands, set the ``FLASK_APP`` and ``FLASK_DEBUG``
 environment variables ::
@@ -23,8 +16,8 @@ environment variables ::
 
 Then run the following commands to bootstrap your environment ::
 
-    git clone https://github.com/gothinkster/flask-realworld-example-app.git
-    cd flask-realworld-example-app
+    git clone git@github.com:da8y01/xkcd3-back.git
+    cd xkcd3-back
     pip install -r requirements/dev.txt
 
 
