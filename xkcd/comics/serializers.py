@@ -22,12 +22,11 @@ class ComicSchema(Schema):
 
     @pre_load
     def make_comic(self, data):
-        return data['comic']
+        return data
 
     @post_dump
     def dump_comic(self, data):
-        #data['author'] = data['author']['profile']
-        return {'comic': data}
+        return data
 
     class Meta:
         strict = True
@@ -37,7 +36,6 @@ class ComicSchemas(ComicSchema):
 
     @post_dump
     def dump_comic(self, data):
-        #data['author'] = data['author']['profile']
         return data
 
     @post_dump(pass_many=True)

@@ -14,7 +14,6 @@ class UserSchema(Schema):
 
     @pre_load
     def make_user(self, data):
-        data = data['user']
         # some of the frontends send this like an empty string and some send
         # null
         if not data.get('email', True):
@@ -23,7 +22,7 @@ class UserSchema(Schema):
 
     @post_dump
     def dump_user(self, data):
-        return {'user': data}
+        return data
 
     class Meta:
         strict = True
