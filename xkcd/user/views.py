@@ -22,10 +22,11 @@ blueprint = Blueprint('users', __name__)
 @marshal_with(user_schema)
 def register_user(first_name, last_name, password, email, **kwargs):
     try:
-        userprofile = UserProfile(User(first_name, last_name, email, password=password, **kwargs).save()).save()
+        user = User(first_name, last_name, email, password=password, **kwargs).save()
+        userprofile = UserProfile(user).save()
     except IntegrityError:
         db.session.rollback()
-        raise InvalidUsage.user_already_registered()
+        raise InvalidUsage.user_already_exists()
     return userprofile.user
 
 
@@ -38,7 +39,7 @@ def login_user(email, password, **kwargs):
     if user is not None and user.check_password(password):
         return user
     else:
-        raise InvalidUsage.user_not_found()
+        raise InvalidUsage.user_bad_credentials()
 
 
 @blueprint.route('/user', methods=('GET',))

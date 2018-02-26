@@ -2,13 +2,15 @@ from flask import jsonify
 
 
 def template(data, code=500):
-    return {'message': {'errors': {'body': data}}, 'status_code': code}
+    return {'message': {'message': data, 'status': code}, 'status_code': code}
 
 
-USER_NOT_FOUND = template(['User not found'], code=404)
-USER_ALREADY_REGISTERED = template(['User already registered'], code=422)
-UKNOWN_ERROR = template([], code=500)
-COMIC_NOT_FOUND = template(['Comic not found'], code=404)
+USER_NOT_FOUND = template('User not found', code=404)
+USER_BAD_CREDENTIALS = template('Please check your credentials', code=401)
+USER_ALREADY_EXISTS = template('User with that email already exists', code=400)
+USER_ALREADY_REGISTERED = template('User already registered', code=422)
+UKNOWN_ERROR = template('Server error', code=500)
+COMIC_NOT_FOUND = template('Comic not found', code=404)
 
 
 class InvalidUsage(Exception):
@@ -32,6 +34,14 @@ class InvalidUsage(Exception):
     @classmethod
     def user_already_registered(cls):
         return cls(**USER_ALREADY_REGISTERED)
+
+    @classmethod
+    def user_already_exists(cls):
+        return cls(**USER_ALREADY_EXISTS)
+
+    @classmethod
+    def user_bad_credentials(cls):
+        return cls(**USER_BAD_CREDENTIALS)
 
     @classmethod
     def uknown_error(cls):

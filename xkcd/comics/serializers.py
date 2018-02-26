@@ -6,6 +6,7 @@ from xkcd.profile.serializers import ProfileSchema
 
 
 class ComicSchema(Schema):
+    id = fields.Str(partial=True)
     month = fields.Str()
     num = fields.Int()
     link = fields.Str()
@@ -17,7 +18,6 @@ class ComicSchema(Schema):
     img = fields.Str()
     title = fields.Str()
     day = fields.Str()
-    author = fields.Nested(ProfileSchema)
     comic = fields.Nested('self', exclude=('comic',), default=True, load_only=True)
 
     @pre_load

@@ -24,22 +24,28 @@ blueprint = Blueprint('comics', __name__)
 
 @blueprint.route('/comic', methods=('GET',))
 @jwt_optional()
-@use_kwargs({'author': fields.Str(), 'limit': fields.Int(), 'offset': fields.Int()})
+@use_kwargs({'limit': fields.Int(), 'offset': fields.Int()})
 @marshal_with(comics_schema)
-def get_comics(author=None, limit=20, offset=0):
+def get_comics(limit=20, offset=0):
     res = Comic.query
-    if author:
-        res = res.join(Comic.author).join(User).filter(User.email == author)
-    return res.offset(offset).limit(limit).all()
+    #return res.offset(offset).limit(limit).all()
+    return res.all()
 
 
 @blueprint.route('/comic', methods=('POST',))
 @jwt_required()
 @use_kwargs(comic_schema)
 @marshal_with(comic_schema)
-def make_comic(month, num, link, year, news, safe_title, transcript, alt, img, title, day):
-    comic = Comic(month=month, num=num, link=link, year=year, news=news, safe_title=safe_title, transcript=transcript, alt=alt, img=img, title=title, day=day,
-                      author=current_identity.profile)
+def make_comic(month, num, link, year, news, safe_title, transcript, alt, img, title, day, id=None):
+    comic = None
+    if type(id) == unicode:
+        comic = Comic.query.filter_by(num=num).first()
+        if not comic:
+            raise InvalidUsage.comic_not_found()
+        else:
+            comic.update(month=month, link=link, year=year, news=news, safe_title=safe_title, transcript=transcript, alt=alt, img=img, title=title, day=day)
+    else:
+        comic = Comic(month=month, num=num, link=link, year=year, news=news, safe_title=safe_title, transcript=transcript, alt=alt, img=img, title=title, day=day)
     comic.save()
     return comic
 
@@ -64,20 +70,11 @@ def delete_comic(slug):
     return '', 200
 
 
-@blueprint.route('/comic/<slug>', methods=('GET',))
+@blueprint.route('/comic/<num>', methods=('GET',))
 @jwt_optional()
 @marshal_with(comic_schema)
-def get_comic(slug):
-    comic = Comic.query.filter_by(slug=slug).first()
+def get_comic(num):
+    comic = Comic.query.filter_by(num=num).first()
     if not comic:
         raise InvalidUsage.comic_not_found()
     return comic
-
-
-@blueprint.route('/comic/feed', methods=('GET',))
-@jwt_required()
-@use_kwargs({'limit': fields.Int(), 'offset': fields.Int()})
-@marshal_with(comics_schema)
-def comics_feed(limit=20, offset=0):
-    return Comics.query.join(current_identity.profile.follows).\
-        order_by(Comic.createdAt.desc()).offset(offset).limit(limit).all()

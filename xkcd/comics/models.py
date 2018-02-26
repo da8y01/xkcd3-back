@@ -27,10 +27,8 @@ class Comic(SurrogatePK, Model):
     img = Column(db.String(200), nullable=False)
     title = Column(db.String(100), nullable=False)
     day = Column(db.String(2), nullable=False)
-    author_id = reference_col('userprofile', nullable=True)
-    author = relationship('UserProfile', backref=db.backref('comics'))
 
-    def __init__(self, author, month, num, link, year,
+    def __init__(self, month, num, link, year,
                           news, safe_title, transcript, alt, 
                           img, title, day, **kwargs):
         dummy_id = str(ObjectId.from_datetime(datetime.datetime.now()))

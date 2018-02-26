@@ -4,6 +4,7 @@ from marshmallow import Schema, fields, pre_load, post_dump
 
 
 class UserSchema(Schema):
+    id = fields.Str()
     first_name = fields.Str()
     last_name = fields.Str()
     email = fields.Email()
@@ -22,7 +23,7 @@ class UserSchema(Schema):
 
     @post_dump
     def dump_user(self, data):
-        return data
+        return {'status':'200', 'message':'The user was created successfully', 'id':data['id'], 'user':data}
 
     class Meta:
         strict = True

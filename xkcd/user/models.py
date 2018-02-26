@@ -39,4 +39,4 @@ class User(SurrogatePK, Model):
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return '<User({first_name!r})>'.format(first_name=self.first_name)
+        return '<User({email!r})>'.format(email=self.email)
