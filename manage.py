@@ -8,7 +8,7 @@ from xkcd.database import db
 
 MIGRATION_DIR = os.path.join('app', 'migrations')
 
-migrate = Migrate(app, db, directory=MIGRATION_DIR)
+migrate = Migrate(app, db)
 #manager = Manager(app)
 manager = Manager(create_app)
 
