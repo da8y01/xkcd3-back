@@ -38,7 +38,7 @@ def get_comics(limit=20, offset=0):
 @marshal_with(comic_schema)
 def make_comic(month, num, link, year, news, safe_title, transcript, alt, img, title, day, id=None):
     comic = None
-    if type(id) == unicode:
+    if len(str(id)) == 24:
         comic = Comic.query.filter_by(num=num).first()
         if not comic:
             raise InvalidUsage.comic_not_found()
